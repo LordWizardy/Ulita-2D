@@ -14,16 +14,39 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
 
+    Animator _animator;
+
+    SpriteRenderer _spriteRenderer;
+
     // Start is called before the first frame update
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
+    void Start()
+    {
+        _animator = GetComponentInChildren<Animator>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
+
     // Update is called once per frame
     private void Update()
     {
         rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+        _animator.SetFloat("speed", rb.velocity.magnitude);
+
+        switch (moveInput)
+        {
+            case -1:
+                _spriteRenderer.flipX = true;
+                break;
+            case 1:
+                _spriteRenderer.flipX = false;
+                break;
+            case 0:
+                break;
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)

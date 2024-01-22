@@ -11,7 +11,7 @@ public class EnemyBehavior : MonoBehaviour
     Transform target;
     Rigidbody2D rb;
     
-    float dir = 1f;
+    float flip = 1f;
 
     void Awake()
     {
@@ -23,8 +23,10 @@ public class EnemyBehavior : MonoBehaviour
     }
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, target.position, dir * speed * Time.deltaTime);
-        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+        var dir = Mathf.Sign(target.position.x - transform.position.x);
+        
+        //transform.position = Vector2.MoveTowards(transform.position, target.position, dir * speed * Time.deltaTime);
+        rb.velocity = new Vector2(dir * flip * speed, rb.velocity.y);
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -32,12 +34,15 @@ public class EnemyBehavior : MonoBehaviour
         if (collider.CompareTag("Mapa"))
         {
             Debug.Log("Zed");
-            rb.velocity = new Vector2(0, jumpForce);
+            if (rb.velocity.y == 0)
+            {
+                rb.velocity = new Vector2(0, jumpForce);
+            }
         }
         if (collider.CompareTag("Player"))
         {
             Debug.Log("Player");
-            dir *= -1;
+            flip *= -1;
         }
     }
 }
